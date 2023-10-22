@@ -215,26 +215,10 @@ detectObjects();
 
 
 
-// Load the COCO-SSD model for object detection
+// Initialize TensorFlow.js and COCO-SSD model
+let model;
 async function loadModel() {
   model = await cocoSsd.load();
-}
-
-// Object Detection Function
-async function detectObjects() {
-  const predictions = await model.detect(video);
-  // Clear previous canvas drawings
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw bounding boxes and labels
-  predictions.forEach(prediction => {
-    const [x, y, width, height] = prediction['bbox'];
-    ctx.strokeStyle = '#00FF00';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(x, y, width, height);
-    ctx.fillStyle = '#00FF00';
-    ctx.fillText(prediction['class'], x, y);
-  });
 }
 
 let model;
@@ -298,7 +282,24 @@ loadModel().then(() => {
 
 let selectedObject = null;
 
+
 // Object Detection Function
+async function detectObjects() {
+  const predictions = await model.detect(video);
+  // Clear previous canvas drawings
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw bounding boxes and labels
+  predictions.forEach(prediction => {
+    const [x, y, width, height] = prediction['bbox'];
+    ctx.strokeStyle = '#00FF00';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(x, y, width, height);
+    ctx.fillStyle = '#00FF00';
+    ctx.fillText(prediction['class'], x, y);
+  });
+}
+
 async function detectObjects() {
   const predictions = await model.detect(video);
   // Clear previous canvas drawings
