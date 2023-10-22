@@ -1,4 +1,28 @@
 
+// Setup camera and video element
+let video = document.getElementById('video');
+async function setupCamera(deviceId) {
+  // Stop streams if there are any
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(track => track.stop());
+  }
+  
+  // Camera setup
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      facingMode: 'environment',
+      deviceId: deviceId ? { exact: deviceId } : undefined
+    }
+  });
+  video.srcObject = stream;
+  
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      resolve(video);
+    };
+  });
+}
+
 // Initialize TensorFlow.js and COCO-SSD model
 let model;
 async function loadModel() {
